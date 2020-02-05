@@ -15,8 +15,11 @@ const mapDispatchToProps = dispatch => ({
 class ProfileModal extends React.Component {
 
     state = {
-        profile: this.props.profile
+        profile: ''
+    }
 
+    componentDidMount = () => {
+      this.setState({profile: this.props.profile})
     }
 
     updateObj = (ev) => {
@@ -30,10 +33,9 @@ class ProfileModal extends React.Component {
       const {_id} = JSON.parse(JSON.stringify(this.props.profile));
       let resp = await Api.fetch('/profile/' + _id, 'PUT', JSON.stringify(this.state.profile))
       if(resp) {
-          console.log("yo")
-        }
         this.props.addCurrentUser(this.state.profile)
-        this.props.setModal()
+      }
+      this.props.setModal()
     }
   render() {
     return (
