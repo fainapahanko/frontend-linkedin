@@ -18,7 +18,6 @@ let dateAreaStyle = {
 }
 
 const Experience = (props) => {
-    console.log(props)
     const now = new Date()
     return ( 
         <Media className="my-5">

@@ -27,14 +27,13 @@ class ExperienceModal extends React.Component {
         let expr = this.state.experience
         if(this.props.experience) {
             const {_id} = JSON.parse(JSON.stringify(this.props.experience));
-            let resp = await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr))
+            await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr))
         } else {
             await Api.fetch('/profile/' + Api.USER + '/experiences/', "POST", JSON.stringify(this.state.experience))
         }
         this.props.setModal()
     }
     render() {
-        console.log(this.props)
         return (
             <>
             <Modal isOpen={this.props.open}> 
@@ -46,7 +45,7 @@ class ExperienceModal extends React.Component {
                 alt="linkedIn background"
             ></img>
             </div>
-            <Form className="update-form mt-5" style={{marginTop: "100px"}} onSubmit={this.handleSubmit}>
+            <Form className="update-form mt-5" onSubmit={this.handleSubmit}>
             <FormGroup>
                 <Label for="examplePassword">Company</Label>
                 <Input
@@ -77,7 +76,16 @@ class ExperienceModal extends React.Component {
                 />
             </FormGroup>
             <FormGroup>
-                <Label for="examplePassword">Duties</Label>
+                <Label for="examplePassword">End Date</Label>
+                <Input
+                type="date"
+                onChange={this.updateObj}
+                id="endDate"
+                placeholder="Date you finished(if necessary)?"
+                />
+            </FormGroup>
+            <FormGroup>
+                <Label for="description">Duties</Label>
                 <Input
                 type="text"
                 onChange={this.updateObj}

@@ -26,7 +26,6 @@ class EditComment extends Component {
 
     save = () => {
         Api.fetch("/posts/" + this.props.comment.commentId, "PUT", JSON.stringify({text: this.state.text})).then((res) => {
-            console.log(res);
             if (res && res._id && this.state.selectedFile) {
                 var formData = new FormData();
                 formData.append("image", this.state.selectedFile);

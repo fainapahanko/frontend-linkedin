@@ -55,7 +55,6 @@ class CurrentUserPage extends React.Component {
 
     fetchingCurrentExpirience = async() => {
         let resp = await Api.fetch('/profile/' + this.props.match.params.username + '/experiences', 'GET')
-        console.log(resp)
         this.setState({
             experience: resp,
             loading: false

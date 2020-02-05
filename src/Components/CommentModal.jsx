@@ -13,13 +13,11 @@ class CommentModal extends React.Component {
     submit = (e) => {
         if (this.state.comment._id) {
             Api.fetch("/posts/" + this.props.postId, "PUT", JSON.stringify(this.state.comment)).then(res => {
-                console.log("edit", res);
                 this.props.refresh();
             });
 
         } else {
             Api.fetch("/posts/" + this.props.postId + "/comment", "POST", JSON.stringify(this.state.comment)).then(res => {
-                console.log("inserted", res);
                 this.props.refresh()
             });
         }
@@ -31,7 +29,6 @@ class CommentModal extends React.Component {
     };
 
     onChangeHandler = event => {
-        console.log(event.target.files[0]);
         this.setState({
             selectedFile: event.target.files[0],
             loaded: 0,
