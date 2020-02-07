@@ -19,7 +19,6 @@ class CurrentUserPage extends React.Component {
         experience: []
     }
     render() {
-        console.log(this.state.user)
         return ( 
             <Row>
                 <Col className="col-lg-7 col-12 mt-3">
