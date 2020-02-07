@@ -27,8 +27,8 @@ class ChatRoom extends React.Component {
         // const options = {
         //     transports: ["websocket"]
         // };
-        // this.socket = io(`https://striveschool.herokuapp.com/api/messages/admin`,options)
-        // this.socket.on('bmsg', (msg) => {
+        // this.socket = io(`https://striveschool.herokuapp.com/api/messages/${this.props.currentUser.username}`,options)
+        // this.socket.on('message', (msg) => {
         //     console.log('hello')
         //     this.setState({
         //         messages: msg
