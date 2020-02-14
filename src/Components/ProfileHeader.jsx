@@ -20,6 +20,7 @@ class MyProfileHeader extends React.Component {
     }
     render(){
         const props = this.props
+        const username = localStorage.getItem('username')
         return ( 
             <>
                 <div className='profile-div-header'>
@@ -30,7 +31,7 @@ class MyProfileHeader extends React.Component {
                     <p style={{margin: "5px 0px"}}>{props.user.title}</p>
                     <p style={{margin: "5px 0px"}}>{props.user.area}</p> 
                 </div>
-                <button onClick={this.toggleChat}>Write a message</button>
+                {username !== props.user.username && <button onClick={this.toggleChat}>Write a message</button>}
                 {this.state.chat && <ChatRoom user={props.user} toggle={this.toggleChat} />}
             </>
         );

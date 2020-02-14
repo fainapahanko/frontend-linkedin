@@ -36,14 +36,22 @@ class ModalPicture extends React.Component {
     }
 
     uploadPucture= async() => {
+        const token = localStorage.getItem('token')
         const formData = new FormData();
         formData.append("profile", this.state.file)
-        let resp = await Api.request("/profile/" + Api.USER + "/picture", "POST", formData);
-        if(resp){
-            console.log("yo")
-            this.props.addCurrentUser(resp)
+        let resp = await fetch(`http://localhost:3433/profile/${this.props.profile.username}/picture`, {
+            method:'POST',
+            body: formData,
+            headers: {
+                "Authorization": "Bearer " + token,
+            }
+        })
+        if(resp.ok){
+            console.log('Uraaaaa')
+        } else {
+            console.log(resp)
         }
-        this.props.setModalPicture()
+        this.props.setModalPicture(!this.props.open)
     }
 
     render() {
@@ -71,7 +79,7 @@ class ModalPicture extends React.Component {
                             </div>
                             <div>
                             <Button style={{backgroundColor:"white", border: "1px solid #007ACC", color: "#007ACC", width: "100px"}} onClick={this.uploadPucture}>Upload</Button>
-                            <Button style={{backgroundColor:"white", border: "1px solid #007ACC", color: "#007ACC", width: "100px"}} onClick={this.props.setModalPicture}>Exit</Button>
+                            <Button style={{backgroundColor:"white", border: "1px solid #007ACC", color: "#007ACC", width: "100px"}} onClick={() => this.props.setModalPicture(!this.props.open)}>Exit</Button>
                             </div>
                         </Col>
                     </Row>

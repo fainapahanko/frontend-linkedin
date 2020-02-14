@@ -10,10 +10,15 @@ export default function (state = {}, action) {
                 ...state,
                 currentUser: undefined
             };
-        case "ADD_ALL_USERS":
+        case "ADD_TOKEN":
             return {
                 ...state,
-                users: action.payload
+                token: action.payload
+            };
+        case "REMOVE_TOKEN":
+            return {
+                ...state,
+                token: undefined
             };
         default:
             return state

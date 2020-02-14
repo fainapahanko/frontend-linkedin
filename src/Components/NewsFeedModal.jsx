@@ -25,7 +25,7 @@ const NewsFeedModel = (props) => {
     };
 
     return (
-        <div>
+        <div style={{width: "100%"}}>
             <button className="share-box_trigger share-box__open" onClick={toggle}>{buttonLabel}<i
                 className="far fa-edit fa-2x" id="newsfeedPencil"></i>Start a post
             </button>

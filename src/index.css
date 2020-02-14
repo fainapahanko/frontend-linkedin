@@ -109,8 +109,6 @@ code {
 
 .new-post-container {
   padding: 15px;
-  background-color: #e9ecef;
-
 }
 
 .user-image {
@@ -190,13 +188,16 @@ code {
 }
 
 .share-box_trigger {
-border-right: 1px solid rgba(0, 0, 0, 0.15) !important;
-background-color: white !important;
+  width:100%;
+border-right: 2px solid rgba(0, 0, 0, 0.15) !important;
+background-color: rgb(245, 245, 245) !important;
 cursor: pointer !important;
 padding: 40px !important;
 color: black !important;
 }
-
+.post-bottom-icon-heart{
+  display: flex
+}
 .display-flex {
 display: flex;
 }
@@ -243,6 +244,7 @@ float: left;
 .posts-random-image {
   height: 500px;
   width: 500px;
+  object-fit: cover;
 }
 
 

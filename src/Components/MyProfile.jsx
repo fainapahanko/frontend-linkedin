@@ -1,87 +1,126 @@
-import React from 'react';
-import Loader from 'react-loader-spinner';
-import MyProfileHeader from './MyProfileHeader'
-import '../index.css'
-import ExperienceModal from './ExperienceModal'
-import MyExperience from './MyExperience'
-import {Row, Col} from'reactstrap'
-import Api from '../API'
-import AllUsersList from './AllUsersList';
-import '../main.css'
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import Loader from "react-loader-spinner";
+import MyProfileHeader from "./MyProfileHeader";
+import "../index.css";
+import ExperienceModal from "./ExperienceModal";
+import MyExperience from "./MyExperience";
+import { Row, Col } from "reactstrap";
+import Api from "../API";
+import AllUsersList from "./AllUsersList";
+import "../main.css";
+import { connect } from "react-redux";
 
 const mapStateToProps = state => state
 const mapDispatchToProps = dispatch => ({
-    setAllUsers: users => dispatch({
-        type: "ADD_ALL_USERS",
-        payload: users
-    })
+  addCurrentUser: user => dispatch({
+      type: "ADD_CURRENT_USER",
+      payload: user
+  })
 })
-class MyProfile extends React.Component {
-    state = { 
-        loading: true,
-        profile: '',
-        expirience: '',
-        modal: false
-    }
-    setModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        })
-    }
-    render() {
-        return ( 
-            <Row>
-                <Col className="col-lg-7 col-12 mt-3">
-                {this.state.loading ? 
-                    <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> : 
-                    <div className="profile-main-div"> <MyProfileHeader /> </div>
-                }
-                {this.state.loading ? 
-                    <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> :
-                    this.state.expirience && <div className="mt-3 px-5 py-4 profile-main-div"> 
-                        <h3 style={{fontSize: "26px"}}>Experience</h3> 
-                        <h4 onClick={this.setModal}>Add Experience</h4>
-                    {this.state.expirience
-                    .map((u,i) => ( <MyExperience fetchExp={this.fetchExp} usExpData={u} key={i} />))}</div>
-                }
-                </Col>
-                <Col className="col-5 d-none d-lg-block  mt-3">
-                    {this.props.users && <div className="p-3">{this.props.users.map((u,i)=>(<AllUsersList user={u} key={i} />))}</div>}
-                </Col>
-                {this.state.modal && <ExperienceModal setModal={this.setModal} open={this.state.modal} fetchExp={this.fetchExp} />}
-            </Row>
-         );
-    }
-    componentDidMount = () => {
-        this.fetchingUsers()
-        this.fetchExp()
+
+const MyProfile = (props) => {
+    const [users, setUsers] = useState([]);
+    const [modal, setModal] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [user, setUser] = useState({})
+
+    const toggle = () => {
+        setModal(true)
+    };
+
+    const fetchingUsers = async () => {
+        let username = localStorage.getItem('username')
+        let response = await Api.fetch("/profile", "GET");
+        let users = response.filter(resp => resp.username !== username)
+        setUsers(users)
+        console.log(users)
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
-        if (prevProps.match.params.userId !== this.props.match.params.userId){
-            this.fetchingCurrentUser()
-            this.fetchingCurrentExpirience()
+    const getMyProfile = async() => {
+      const token = localStorage.getItem('token')
+      let resp = await fetch('http://localhost:3433/profile/me', {
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + token,
         }
+      })
+      if(resp.ok) {
+        let currentUser = await resp.json()
+        console.log(currentUser)
+        setUser(currentUser)
+      } else {
+        console.log('loch')
+      }
     }
 
-    fetchExp = async() => {
-        let response = await Api.fetch(`/profile/${Api.USER}/experiences`, 'GET')
-        this.setState({
-            expirience: response
-        })
-    }
-    
-    fetchingUsers = async() => {
-        this.setState({
-            loading: true
-        })
-        let response = await Api.fetch('/profile', 'GET')
-        this.props.setAllUsers(response)
-        this.setState({
-            loading: false,
-        })
-    }
-}
- 
+    useEffect(() => {
+        setLoading(true)
+        setTimeout(() => {
+          fetchingUsers()
+          getMyProfile()
+          setLoading(false)
+        },1500)
+    }, [])
+    console.log(props)
+    return (
+      <Row>
+        <Col className="col-lg-7 col-12 mt-3">
+          {loading ? (
+            <>
+              <Loader
+                color="#007ACC"
+                height={40}
+                width={40}
+                type="TailSpin"
+                className="loader-profile-page"
+              />
+            </>
+          ) : (
+            <div className="profile-main-div">
+              <MyProfileHeader user={user.profile} />
+            </div>
+          )}
+          {loading ? (
+            <>
+              <Loader
+                color="#007ACC"
+                height={40}
+                width={40}
+                type="TailSpin"
+                className="loader-profile-page"
+              />
+            </>
+          ) :  (
+              <div className="mt-3 px-5 py-4 profile-main-div">
+                <h3 style={{ fontSize: "26px" }}>Experience</h3>
+                <h4 onClick={toggle}>Add Experience</h4>
+                {user.experience ? user.experience.map((u, i) => (
+                  <MyExperience
+                    usExpData={u}
+                    key={i}
+                  />
+                )): <></>}
+              </div>
+            )
+          }
+        </Col>
+        <Col className="col-5 d-none d-lg-block  mt-3">
+          {users && (
+            <div className="p-3">
+              {users.map((u, i) => (
+                <AllUsersList user={u} key={i} />
+              ))}
+            </div>
+          )}
+        </Col>
+        {modal && (
+          <ExperienceModal
+            setModal={toggle}
+            open={modal}
+          />
+        )}
+      </Row>
+    );
+  };
+
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);

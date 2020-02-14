@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Loader from 'react-loader-spinner';
 import ProfileHeader from './ProfileHeader'
 import '../index.css'
@@ -8,68 +8,66 @@ import Api from '../API'
 import AllUsersList from './AllUsersList';
 import '../main.css'
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-const mapStateToProps = state => state
+const CurrentUserPage = (props) => {
+    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState({})
+    const [users, setUsers] = useState([])
+    const mounted = useRef();
+    // componentDidUpdate = (prevProps, prevState) => {
+    //     if (prevProps.match.params.username !== this.props.match.params.username){
+    //         this.fetchingCurrentUser()
+    //         this.fetchingCurrentExpirience()
+    //     }
+    // }
 
-class CurrentUserPage extends React.Component {
-    state = { 
-        loading: true,
-        user: {},
-        experience: []
-    }
-    render() {
-        return ( 
-            <Row>
-                <Col className="col-lg-7 col-12 mt-3">
-                {this.state.loading ? 
-                    <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> : 
-                    <div className="profile-main-div"> <ProfileHeader user={this.state.user} /> </div>
-                }
-                {this.state.loading ? 
-                    <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> :
-                    this.state.experience && <div className="mt-3 px-5 py-4 profile-main-div"> 
-                        <h3 style={{fontSize: "26px"}}>Experience</h3> 
-                    {this.state.experience
-                    .map((u,i) => ( <Experience experience={u} key={i} />))}</div>
-                }
-                </Col>
-                <Col className="col-5 d-none d-lg-block  mt-3">
-                    {this.props.users && <div className="p-3">{this.props.users.map((u,i)=>(<AllUsersList user={u} key={i} />))}</div>}
-                </Col>
-            </Row>
-         );
-    }
-    componentDidMount = () => {
-        this.fetchingCurrentUser()
-        this.fetchingCurrentExpirience()
+    const fetchingUsers = async () => {
+        let username = localStorage.getItem('username')
+        let response = await Api.fetch("/profile", "GET");
+        let users = response.filter(resp => resp.username !== username)
+        setUsers(users)
+        console.log(users)
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
-        if (prevProps.match.params.username !== this.props.match.params.username){
-            this.fetchingCurrentUser()
-            this.fetchingCurrentExpirience()
-        }
-    }
+    useEffect(() => {
+        setLoading(true)
+        setTimeout(() => {
+            fetchingCurrentUser()
+            setLoading(false)
+        },1500)
+    },[props.match.params.username])
 
-    fetchingCurrentExpirience = async() => {
-        let resp = await Api.fetch('/profile/' + this.props.match.params.username + '/experiences', 'GET')
-        this.setState({
-            experience: resp,
-            loading: false
-        })
-    }
+    useEffect(() => {
+        fetchingCurrentUser()
+        fetchingUsers()
+    }, [])
 
-    fetchingCurrentUser = async() => {
-        this.setState({
-            loading: true
-        })
-        let resp = await Api.fetch('/profile/' + this.props.match.params.username, 'GET')
-        this.setState({
-            user: resp,
-            loading: false
-        })
+    const fetchingCurrentUser = async() => {
+        setLoading(true)
+        let resp = await Api.fetch('/profile/' + props.match.params.username, 'GET')
+        setUser(resp)
+        setLoading(false)
     }
+    return ( 
+        <Row>
+            <Col className="col-lg-7 col-12 mt-3">
+            {loading ? 
+                <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> : 
+                <div className="profile-main-div"> <ProfileHeader user={user.profile} /> </div>
+            }
+            {loading ? 
+                <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> :
+                user.experience && <div className="mt-3 px-5 py-4 profile-main-div"> 
+                    <h3 style={{fontSize: "26px"}}>Experience</h3> 
+                {user.experience
+                .map((u,i) => ( <Experience experience={u} key={i} />))}</div>
+            }
+            </Col>
+            <Col className="col-5 d-none d-lg-block  mt-3">
+                {users && <div className="p-3">{users.map((u,i)=>(<AllUsersList user={u} key={i} />))}</div>}
+            </Col>
+        </Row>
+        );
 }
  
-export default withRouter(connect(mapStateToProps)(CurrentUserPage));
+export default withRouter(CurrentUserPage);

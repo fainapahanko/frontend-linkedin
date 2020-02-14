@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import {Link} from 'react-router-dom'
 import Api from "../API"
-import { faBriefcase, faSearch, faHome, faUsers, faComments, faBell, faTh } from '@fortawesome/free-solid-svg-icons'
+import { faBriefcase, faClipboardList, faSearch, faHome, faUsers, faComments, faBell, faTh } from '@fortawesome/free-solid-svg-icons'
 import '../main.css'
 import ProfilesDropDown from './ProfilesDropDown';
 import { connect } from 'react-redux';
@@ -14,6 +14,9 @@ const mapStateToProps = state => state
 const mapDispatchToProps = dispatch => ({
    loggout: () => dispatch({
       type: "REMOVE_CURRENT_USER"
+   }),
+   removeToken: () => dispatch({
+      type: "REMOVE_TOKEN"
    })
 })
 
@@ -51,12 +54,20 @@ class NavigationBar extends React.Component {
          srch: usersData
       })
    }
+
+   loggout = () => {
+      localStorage.setItem('token', undefined)
+      localStorage.setItem('username', undefined)
+      this.props.loggout()
+      this.props.removeToken()
+   }
+
     render() {
       return (
          <Navbar className="nav-top" expand="lg">
             <Nav style={{margin: "0 auto"}}> 
                <NavbarBrand href="/">
-                  <FontAwesomeIcon className="linkedin-icon" onClick={this.props.loggout} icon={faLinkedin}/>
+                  <FontAwesomeIcon className="linkedin-icon" onClick={this.loggout} icon={faLinkedin}/>
                </NavbarBrand>
                <NavItem>
                   <div className="search-div">
@@ -93,7 +104,7 @@ class NavigationBar extends React.Component {
                   <div className="nav-item-div">
                   <Link to="/Newsfeed" style={{ textDecoration: 'none',color: 'white'}}>  
                      <FontAwesomeIcon className="nav-icon" icon={faUsers}/>
-                     <NavLink>My Network</NavLink>
+                     <NavLink className='my-network'>My Network</NavLink>
                      </Link>
                   </div>
                </NavItem>
@@ -117,16 +128,25 @@ class NavigationBar extends React.Component {
                      <NavLink>Notifications</NavLink>
                   </div>
                </NavItem>
-               <NavItem>
-                  <div className="nav-item-div">
-                     <Link to="/Profile" style={{ textDecoration: 'none', color: 'white'}} >
-                     <div className="profile-image-div">
-                        {this.props.currentUser.image ? <img src={this.props.currentUser.image} className="nav-profile-pic" alt="profile-img"/> :                         <img src="https://www.legalniewsieci.pl/!data/newsy/news_1982.jpg" className="nav-profile-pic" alt="profile-img"/>}
-                     </div>
-                     <NavLink>Me</NavLink>
-                     </Link>
+                  {this.props.token  
+                  ? <NavItem> <div className="nav-item-div">
+                  <Link to="/Profile" style={{ textDecoration: 'none', color: 'white'}} >
+                  <div className="profile-image-div">
+                     {this.props.currentUser ? <img src={this.props.currentUser.profile.image} className="nav-profile-pic" alt="profile-img"/> : <img src="https://www.legalniewsieci.pl/!data/newsy/news_1982.jpg" className="nav-profile-pic" alt="profile-img"/>}
                   </div>
+                  <NavLink>Me</NavLink>
+                  </Link>
+               </div>
                </NavItem>
+               : <NavItem>
+                     <Link to="/login">
+                     <div className="nav-item-div">
+                        <FontAwesomeIcon className="nav-icon" icon={faClipboardList}/>
+                        <NavLink className='login-link'>Login</NavLink>
+                        </div>
+                     </Link>
+               </NavItem>
+               }
                <div className="vl d-lg-inline-block d-none"></div>
                <NavItem>
                   <div className="nav-item-div">

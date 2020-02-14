@@ -5,7 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 const initialState = {
     currentUser: undefined,
-    users: [],
+    token: undefined
 }
 
 export default function configureStore() {

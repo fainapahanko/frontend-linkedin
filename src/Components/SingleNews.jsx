@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Button, ListGroup, ListGroupItem } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import NewsFeedComments from './NewsFeedComments'
 import Api from "../API";
@@ -9,15 +9,34 @@ import CommentModal from "./CommentModal";
 import moment from "moment";
 import NewsFeedEdit from "./NewsFeedEdit";
 import '../index.css'
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => state
 
 class SingleNews extends Component {
-    state = {  }
+    state = { 
+      like: false
+    }
 
     likedPost = async(news) => {
         await Api.fetch("/posts/likes/" + news._id, "POST");
         this.props.loadData()
+        this.setState({
+          like: !this.state.like
+        })
+    }
+    componentDidMount = () => {
+      let likes = this.props.news.likes
+      console.log(likes)
+      let user = likes.find(l => l.username === this.props.currentUser.username)
+      if(user) {
+        this.setState({
+          like: true
+        })
+      }
     }
     render() { 
+      console.log(this.props)
         return ( 
             <div className="new-post-container">
                         <ListGroup>
@@ -38,7 +57,7 @@ class SingleNews extends Component {
                               </div> }  
                               <div className="details-container">
                                 <div className="user-name">
-                                  <Link to={"users/" + this.props.news.username}>
+                                  <Link to={"currentUserPage" + this.props.news.username}>
                                     {this.props.user.name} {this.props.user.surname}
                                   </Link>
                                 </div>
@@ -69,17 +88,17 @@ class SingleNews extends Component {
                             <div className="post-age">
                               <div className="post-bottom-icons">
                                 <div className="post-bottom-icons">
-                                  <div className="post-bottom-icon">
-                                    <div className="post-bottom-icon">
-                                      <FontAwesomeIcon
+                                  <div className="post-bottom-icon-heart">
+                                      {this.state.like ? <FontAwesomeIcon
                                         onClick={() => this.likedPost(this.props.news)}
-                                        style={{ fontSize: "30px" }}
-                                        icon={faThumbsUp}
-                                      />
-                                    </div>
-                                    <div>
+                                        style={{ fontSize: "30px", color: "red" }}
+                                        icon={faHeart}
+                                      /> : <FontAwesomeIcon
+                                      onClick={() => this.likedPost(this.props.news)}
+                                      style={{ fontSize: "30px", color: "gray" }}
+                                      icon={faHeart}
+                                    />}
                                       <h5>{this.props.news.likesTotal}</h5>
-                                    </div>
                                   </div>
                                 </div>
                                 <div className="post-bottom-icons"></div>
@@ -130,4 +149,4 @@ class SingleNews extends Component {
     }
 }
  
-export default SingleNews;
+export default connect(mapStateToProps)(SingleNews);

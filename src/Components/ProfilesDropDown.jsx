@@ -3,6 +3,7 @@ import Loader from "react-loader-spinner";
 import UsersList from "./UsersList";
 import SearchedUsers from "./SearchedUsers";
 import { connect } from "react-redux";
+import Api from '../API'
 import "../main.css";
 let loaderStyle = {
   position: "relative",
@@ -13,8 +14,10 @@ const mapStateToProps = state => state;
 
 class ProfilesDropDown extends React.Component {
   state = {
-    loading: true
+    loading: true,
+    users: []
   };
+
   render() {
     return (
       <>
@@ -37,8 +40,8 @@ class ProfilesDropDown extends React.Component {
             onClick={this.props.toggleProfileDropdown}
           />
         ))
-         : this.props.users ? (
-          this.props.users.map((u, i) => (
+         : this.state.users ? (
+          this.state.users.map((u, i) => (
             <UsersList
               user={u}
               key={i}
@@ -52,11 +55,21 @@ class ProfilesDropDown extends React.Component {
       </>
     );
   }
+  fetchUsers = async() => {
+    let username = localStorage.getItem('username')
+    let response = await Api.fetch("/profile", "GET");
+    let users = response.filter(resp => resp.username !== username)
+    this.setState({
+      users: users
+    })
+    console.log(users)
+  }
   componentDidMount = () => {
     setTimeout(() => {
       this.setState({
         loading: true
       });
+      this.fetchUsers()
       this.setState({
         loading: false
       });

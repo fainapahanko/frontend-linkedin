@@ -9,14 +9,44 @@ class NewsFeedAdd extends Component {
         text: ""
     };
 
-    save = () => {
-        Api.fetch("/posts/", "POST", JSON.stringify({text: this.state.text})).then((res) => {
-            if (res && res._id && this.state.selectedFile) {
-                var formData = new FormData();
-                formData.append("image", this.state.selectedFile);
-                Api.request("/posts/" + res._id + "/picture", "POST", formData).then(() => this.props.refresh());
-            } else this.props.refresh();
-        });
+    save = async() => {
+        // Api.fetch("/posts/", "POST", JSON.stringify({text: this.state.text})).then((res) => {
+        //     if (res && res._id && this.state.selectedFile) {
+        //         var formData = new FormData();
+        //         formData.append("image", this.state.selectedFile);
+        //         Api.request("/posts/" + res._id + "/picture", "POST", formData).then(() => this.props.refresh());
+        //     } else this.props.refresh();
+        // });
+        const token = localStorage.getItem('token')
+        const username = localStorage.getItem('username')
+        console.log(username)
+        console.log(token)
+        let resp = await fetch('http://localhost:3433/posts/'+username, {
+            method: 'POST',
+            body: JSON.stringify({text: this.state.text}),
+            headers: {
+                "Authorization": "Bearer " + token,
+            }
+        })
+        console.log(resp)
+        if(resp.ok) {
+            const formData = new FormData();
+            formData.append("image", this.state.selectedFile);
+            let response = await fetch('http://localhost:3433/posts/'+resp._id+'/picture', {
+                method: 'POST',
+                body: JSON.stringify({text: this.state.text}),
+                headers: {
+                    "Authorization": "Bearer " + token,
+                }
+            })
+            if(response.ok){
+                console.log('good job')
+                this.props.refresh();
+            }
+        } else{
+            console.log('loch')
+            this.props.refresh();
+        }
     };
 
     updateFeed = (name, newText) => {

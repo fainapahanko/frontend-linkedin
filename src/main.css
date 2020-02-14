@@ -153,7 +153,6 @@ code {
 .input-chatroom{
   width: 260px;
   height: 50px;
-  z-index: 10;
 }
 .btn-chatroom{
   width:100%;
@@ -165,11 +164,15 @@ code {
   color: #0070B7;
   font-size: 30px;
 }
+.my-network{
+  font-size: 9px;
+}
 .main-div-chat-room{
   width: 300px;
   position: fixed;
   bottom: 40px;
   right: 40px;
+  z-index: 1;
 }
 .user-info-current-profile-header-img{
   width: 200px;

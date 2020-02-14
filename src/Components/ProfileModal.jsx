@@ -15,11 +15,23 @@ const mapDispatchToProps = dispatch => ({
 class ProfileModal extends React.Component {
 
     state = {
-        profile: ''
+        profile: '',
     }
 
     componentDidMount = () => {
+      const username = localStorage.getItem('username')
       this.setState({profile: this.props.profile})
+      if(!this.props.profile){
+        this.setState({profile: {
+          name: '',
+          surname:'',
+          bio: '',
+          email: '',
+          title: '',
+          username: username,
+          image: ''
+        }})
+      }
     }
 
     updateObj = (ev) => {
@@ -31,11 +43,14 @@ class ProfileModal extends React.Component {
     handleSubmit = async(event) => {
       event.preventDefault()
       const {_id} = JSON.parse(JSON.stringify(this.props.profile));
+      if(!this.props.profile){
+        const resp = await fetch('')
+      }
       let resp = await Api.fetch('/profile/' + _id, 'PUT', JSON.stringify(this.state.profile))
       if(resp) {
         this.props.addCurrentUser(this.state.profile)
       }
-      this.props.setModal()
+      this.props.setModal(!this.props.open)
     }
   render() {
     return (
@@ -52,12 +67,36 @@ class ProfileModal extends React.Component {
                 alt="linkedIn background"
               ></img>
             </div>
-            <img
-              src={this.props.profile.image}
+            {this.state.profile.image ?             <img
+              src={this.state.profile.image}
               className="modal-img"
               alt="profile pic"
-            />
+            />:<img
+            src="https://fooddole.com/Modules/eCommerce/images/default-img.png"
+            className="modal-img"
+            alt="profile pic"
+          />}
             <Form className="update-form" onSubmit={this.handleSubmit}>
+              <FormGroup>
+                <Label for="examplePassword">Name</Label>
+                <Input
+                  type="text"
+                  onChange={this.updateObj}
+                  name="password"
+                  id="name"
+                  placeholder={this.state.profile.name}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="examplePassword">Surname</Label>
+                <Input
+                  type="text"
+                  onChange={this.updateObj}
+                  name="password"
+                  id="surname"
+                  placeholder={this.state.profile.surname}
+                />
+              </FormGroup>
               <FormGroup>
                 <Label for="examplePassword">Bio</Label>
                 <Input
@@ -65,7 +104,7 @@ class ProfileModal extends React.Component {
                   onChange={this.updateObj}
                   name="password"
                   id="bio"
-                  placeholder={this.props.profile.bio}
+                  placeholder={this.state.profile.bio}
                 />
               </FormGroup>
               <FormGroup>
@@ -75,7 +114,7 @@ class ProfileModal extends React.Component {
                   onChange={this.updateObj}
                   name="email"
                   id="email"
-                  placeholder={this.props.profile.email}
+                  placeholder={this.state.profile.email}
                 />
               </FormGroup>
               <FormGroup>
@@ -85,7 +124,7 @@ class ProfileModal extends React.Component {
                   onChange={this.updateObj}
                   name="password"
                   id="area"
-                  placeholder={this.props.profile.area}
+                  placeholder={this.state.profile.area}
                 />
               </FormGroup>
               <FormGroup>
@@ -95,7 +134,7 @@ class ProfileModal extends React.Component {
                   onChange={this.updateObj}
                   name="password"
                   id="title"
-                  placeholder={this.props.profile.title}
+                  placeholder={this.state.profile.title}
                 />
               </FormGroup>
               <FormGroup>
@@ -105,7 +144,7 @@ class ProfileModal extends React.Component {
                   onChange={this.updateObj}
                   name="password"
                   id="image"
-                  placeholder={this.props.profile.image}
+                  placeholder={this.state.profile.image}
                 />
               </FormGroup>
               <Input
@@ -117,7 +156,7 @@ class ProfileModal extends React.Component {
               <Input
                 style={{width: "150px", textAlign: "center"}}
                 class="btn btn-success"
-                onClick={this.props.setModal}
+                onClick={() => this.props.setModal(!this.props.open)}
                 value="EXIT"
               />
             </Form>
