@@ -15,7 +15,8 @@ const mapStateToProps = state => state
 
 class SingleNews extends Component {
     state = { 
-      like: false
+      like: false,
+      author: false
     }
 
     likedPost = async(news) => {
@@ -26,9 +27,14 @@ class SingleNews extends Component {
         })
     }
     componentDidMount = () => {
+      let username = localStorage.getItem('username')
       let likes = this.props.news.likes
-      console.log(likes)
-      let user = likes.find(l => l.username === this.props.currentUser.username)
+      if(username === this.props.news.username) {
+        this.setState({
+          author: true
+        })
+      }
+      let user = likes.find(l => l.username === username)
       if(user) {
         this.setState({
           like: true
@@ -48,9 +54,9 @@ class SingleNews extends Component {
                                   className="user-image"
                                   alt="news-img"
                                 />
-                              </div> :<div> 
+                              </div> : <div> 
                                     <img
-                                  src='https://www.legalniewsieci.pl/!data/newsy/news_1982.jpg'
+                                  src='https://fooddole.com/Modules/eCommerce/images/default-img.png'
                                   className="user-image"
                                   alt="news-img"
                                 />
@@ -77,13 +83,13 @@ class SingleNews extends Component {
                             </div>
                           </ListGroupItem>
                           <ListGroupItem>{this.props.news.text}</ListGroupItem>
-                          <ListGroupItem className="post-images">
+                          {this.props.news.image &&  <ListGroupItem className="post-images">
                             <img
                               src={this.props.news.image}
                               className="posts-random-image"
                               alt={"image"}
                             />
-                          </ListGroupItem>
+                          </ListGroupItem>}
                           <ListGroupItem>
                             <div className="post-age">
                               <div className="post-bottom-icons">
@@ -123,7 +129,7 @@ class SingleNews extends Component {
                                 </div>
                                 <div className="post-bottom-spacer" />
 
-                                {Api.USER === this.props.news.username && (
+                                {this.state.author && (
                                     <>
                                   <NewsFeedEdit
                                     news={this.props.news}

@@ -166,5 +166,4 @@ class ProfileModal extends React.Component {
     );
   }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileModal);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Media } from 'reactstrap';
 import Moment from 'react-moment';
 import ExperienceModal from './ExperienceModal'
@@ -19,61 +19,56 @@ let dateAreaStyle = {
     color: "gray"
 }
 
-class CurrentExpirience extends Component {
-    state = { 
-        modalOpen: false
-     }
-    setModal = () => {
-        this.setState({
-            modalOpen: !this.state.modalOpen
-        })
-    }
-    render() { 
-        const now = new Date()
-        return ( 
-        
-            <Media className="my-5">
-                <Media left href="#">
-                    {this.props.usExpData.image ? <Media style={userImgStyle} object src={this.props.usExpData.image} alt="Generic placeholder image" /> : <Media object style={userImgStyle} src="http://www.gigabitmagazine.com/sites/default/files/styles/slider_detail/public/topic/image/GettyImages-1017193718_1.jpg?itok=W4-tjXij" /> }
-                </Media>
-                <Media body className="pl-4">
-                    <Media style={headerStyle} heading>
-                        {this.props.usExpData.role}
-                    </Media>
-                    {this.props.usExpData.company}
-                    <br/>
-                    <div style={dateAreaStyle}>
-                        <Moment format="YYYY/MM/DD">
-                        {this.props.usExpData.startDate}
-                        </Moment> 
-                        -
-                        {this.props.usExpData.endDate === null ? 
-                            <Moment format="YYYY/MM/DD"> 
-                                {now} 
-                            </Moment> : 
-                            <Moment format="YYYY/MM/DD"> 
-                            {this.props.usExpData.endDate}
-                            </Moment> 
-                        }
-                    <br/>
-                    {this.props.usExpData.area && this.props.usExpData.area}
-                    <br/>
-                    <div style={{color: "black"}}>
-                        {this.props.usExpData.description && this.props.usExpData.description}
-                        </div>
-                    </div>
-                    <hr/>
-                </Media>
-                <div className="icon-profile-div">
-                        <FontAwesomeIcon
-                            onClick={this.setModal}
-                            icon={faPencilAlt}
-                        />
-                </div>
-                {this.state.modalOpen && <ExperienceModal fetchExp={this.props.fetchExp} setModal={this.setModal} experience={this.props.usExpData} open={this.state.modalOpen} />}
+const CurrentExpirience = (props) => {
+    const [modal, setModal] = useState(false)
+    const toggle = () => {
+        setModal(!modal)
+    };
+    const now = new Date()
+    return ( 
+    
+        <Media className="my-5">
+            <Media left href="#">
+                {props.usExpData.image ? <Media style={userImgStyle} object src={props.usExpData.image} alt="Generic placeholder image" /> : <Media object style={userImgStyle} src="http://www.gigabitmagazine.com/sites/default/files/styles/slider_detail/public/topic/image/GettyImages-1017193718_1.jpg?itok=W4-tjXij" /> }
             </Media>
-         );
-    }
+            <Media body className="pl-4">
+                <Media style={headerStyle} heading>
+                    {props.usExpData.role}
+                </Media>
+                {props.usExpData.company}
+                <br/>
+                <div style={dateAreaStyle}>
+                    <Moment format="YYYY/MM/DD">
+                    {props.usExpData.startDate}
+                    </Moment> 
+                    -
+                    {props.usExpData.endDate === null ? 
+                        <Moment format="YYYY/MM/DD"> 
+                            {now} 
+                        </Moment> : 
+                        <Moment format="YYYY/MM/DD"> 
+                        {props.usExpData.endDate}
+                        </Moment> 
+                    }
+                <br/>
+                {props.usExpData.area && props.usExpData.area}
+                <br/>
+                <div style={{color: "black"}}>
+                    {props.usExpData.description && props.usExpData.description}
+                    </div>
+                </div>
+                <hr/>
+            </Media>
+            <div className="icon-profile-div">
+                    <FontAwesomeIcon
+                        onClick={setModal}
+                        icon={faPencilAlt}
+                    />
+            </div>
+            {modal && <ExperienceModal fetchExp={props.fetchExp} experience={props.usExpData} setModal={toggle}
+            open={modal} />}
+        </Media>
+    );
 }
  
 export default CurrentExpirience;

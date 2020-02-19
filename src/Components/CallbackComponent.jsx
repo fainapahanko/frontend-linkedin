@@ -18,8 +18,6 @@ const CallbackComponent = (props) => {
             const tokenUser = search.split("=")[1];
             const token = tokenUser.split("&")[0]
             const username = search.split("=")[2];
-            console.log(username)
-            console.log(token)
             localStorage.setItem("token", token)
             localStorage.setItem("username", username)
             props.history.push("/profile")

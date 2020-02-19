@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {Col, Row} from 'reactstrap';
 import NewsFeedModal from "./NewsFeedModal"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faVideo, faCamera  } from '@fortawesome/free-solid-svg-icons'
 import '../index.css'
 import Api from "../API";
 
@@ -60,6 +62,13 @@ class NewsFeedAdd extends Component {
 
                     <div className="display-flex bodyNewsFeed">
                         <NewsFeedModal updateFeed={this.updateFeed} save={this.save}/>
+                        <button className="share-box_trigger share-box_trigger1">
+                            <FontAwesomeIcon onClick={this.something} className="exit-btn-chatroom" icon={faVideo} />
+                        </button>
+                        <button className="share-box_trigger share-box_trigger1">
+                            <FontAwesomeIcon onClick={this.something} className="exit-btn-chatroom" icon={faCamera} />
+                        </button>
+
                     </div>
 
                 </Col>

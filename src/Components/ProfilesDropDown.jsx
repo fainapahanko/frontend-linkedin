@@ -62,7 +62,6 @@ class ProfilesDropDown extends React.Component {
     this.setState({
       users: users
     })
-    console.log(users)
   }
   componentDidMount = () => {
     setTimeout(() => {

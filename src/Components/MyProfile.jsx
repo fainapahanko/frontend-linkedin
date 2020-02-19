@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Loader from "react-loader-spinner";
 import MyProfileHeader from "./MyProfileHeader";
-import "../index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import ExperienceModal from "./ExperienceModal";
 import MyExperience from "./MyExperience";
 import { Row, Col } from "reactstrap";
 import Api from "../API";
 import AllUsersList from "./AllUsersList";
 import "../main.css";
+import "../index.css";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => state
@@ -25,7 +27,7 @@ const MyProfile = (props) => {
     const [user, setUser] = useState({})
 
     const toggle = () => {
-        setModal(true)
+        setModal(!modal)
     };
 
     const fetchingUsers = async () => {
@@ -92,8 +94,14 @@ const MyProfile = (props) => {
             </>
           ) :  (
               <div className="mt-3 px-5 py-4 profile-main-div">
+                <div className="icon-profile-div">
+                    <FontAwesomeIcon
+                    onClick={toggle}
+                    className="fapencil"
+                    icon={faPlus}
+                />
+                </div>
                 <h3 style={{ fontSize: "26px" }}>Experience</h3>
-                <h4 onClick={toggle}>Add Experience</h4>
                 {user.experience ? user.experience.map((u, i) => (
                   <MyExperience
                     usExpData={u}

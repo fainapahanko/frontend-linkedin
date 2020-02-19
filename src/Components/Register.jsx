@@ -83,6 +83,7 @@ const Register = (props) => {
                 let currentUser = await picResp.json()
                 console.log("URRSAAAA")
                 props.setUser(currentUser)
+                props.history.push("/profile")
             } else {
                 console.log("Da blya :(")
             }

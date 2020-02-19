@@ -18,12 +18,23 @@ class NewsFeed extends Component {
   };
 
   loadData = async () => {
-    const newsfeed = await Api.fetch("/posts");
-    const users = await Api.fetch("/profile");
+    let resp = await fetch('http://localhost:3433/posts', {
+      method: "GET"
+    })
+    console.log('pizdec vsio besit')
+    console.log(resp)
+    const newsfeed = await resp.json()
+    let uResp = await fetch('http://localhost:3433/profile', {
+      method: "GET"
+    })
+    const users = await uResp.json()
+    console.log(newsfeed)
+    console.log(users)
     newsfeed.map(post => {
       post.user = users.find(user => user.username === post.username);
       return post;
     });
+    console.log(newsfeed)
     newsfeed.reverse();
     this.setState({
       newsfeed: newsfeed,
@@ -95,6 +106,7 @@ class NewsFeed extends Component {
   };
 
   render() {
+    console.log(this.state)
     if (!this.state.newsfeed) return null;
     const allnews = [...this.state.newsfeed];
     allnews.map(news => {

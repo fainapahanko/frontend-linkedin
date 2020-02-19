@@ -9,7 +9,9 @@ import {Container} from 'reactstrap'
 import NavigationBar from './NavigationBar';
 import Profile from './MyProfile'
 import { connect } from 'react-redux';
+
 const mapStateToProps = state=> state
+
 const mapDispatchToProps = dispatch => ({
   setUser: user => dispatch({
       type:"ADD_CURRENT_USER",
@@ -25,18 +27,17 @@ const Main = (props) => {
 
   const checkAurth = async() => {
     const token = localStorage.getItem('token')
-    console.log(token)
     const response = await fetch('http://localhost:3433/users/refresh', {
         method: "POST",
         headers: {
           "Authorization": "Bearer " + token,
       }
     })
-    console.log(response)
     if(response.ok){
       let token = await response.json()
       props.setToken(token.token)
       localStorage.setItem('token', token.token)
+      props.setToken(token.token)
       const resp = await fetch('http://localhost:3433/profile/me',{
           headers: {
             "Authorization": "Bearer " + token.token,
@@ -49,11 +50,12 @@ const Main = (props) => {
     }
     else {
       localStorage.setItem('token', undefined)
+      localStorage.setItem('username', undefined)
+      localStorage.setItem('password', undefined)
     }
   }
 
   useEffect(() => {
-    console.log("hello")
     checkAurth()
   }, [])
 
@@ -69,7 +71,7 @@ const Main = (props) => {
               <Route path="/register" component={Register} />
               <Route path="/Newsfeed" component={Newsfeed}/>
               <Route path="/callback">
-                <CallbackComponent />{/* setUserAuth={(userAuth) => this.setState({ userAuth: userAuth})} */}
+                <CallbackComponent />
               </Route>
           </Switch>
       </Container>   

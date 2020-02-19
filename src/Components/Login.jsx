@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, Label, Input, Row, Col } from "reactstrap";
 // import RegistrationModal from './RegistrationModal'
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import ErrorMessage from './ErrorMessage'
 import Api from "../API";
 import { connect } from "react-redux";
@@ -53,13 +53,12 @@ const  Login = (props) => {
         "Content-Type": "application/json"
       }
     })
-    console.log(resp)
     if(resp.ok){
       let access_token = await resp.json()
-      console.log(access_token)
       localStorage.setItem('token', access_token.token)
       localStorage.setItem('username', username)
       getMyProfile(access_token.token)
+      props.history.push("/profile")
     }
     else {
       setError(true)
@@ -115,4 +114,4 @@ const  Login = (props) => {
     );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

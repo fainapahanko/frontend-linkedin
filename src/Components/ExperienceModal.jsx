@@ -3,15 +3,28 @@ import Api from '../API'
 import {Modal, Form, FormGroup, Label, Input, Button} from "reactstrap";
 import {connect} from 'react-redux'
 
+const mapStateToProps = state => state
+
+const mapDispatchToProps = dispatch => ({
+    setUser: user => dispatch({
+        type:"ADD_CURRENT_USER",
+        payload: user
+    })
+  })
+
 class ExperienceModal extends React.Component {
     state = {
         experience: this.props.experience || {}
     }
     updateObj = (e) => {
         e.preventDefault()
-        if(e.target.name === 'picture'){
+        if(e.target.id === 'image'){
             this.setState({
                 file: e.target.files[0]
+            })
+        } else if (e.target.id === 'tillNow'){
+            this.setState({
+                experience: Object.assign(this.state.experience,{endDate: new Date()})
             })
         }
         else{
@@ -25,13 +38,37 @@ class ExperienceModal extends React.Component {
         let formData = new FormData();
         formData.append("experience", this.state.file);
         let expr = this.state.experience
+        console.log(expr)
         if(this.props.experience) {
+            const formData = new FormData();
+            formData.append("experience", this.state.file)
             const {_id} = JSON.parse(JSON.stringify(this.props.experience));
-            await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr))
+            const post = await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr)) 
+            await Api.fetch('/profile/' + Api.USER + '/experiences/' + post._id + 'picture', "PUT", formData)
         } else {
-            await Api.fetch('/profile/' + Api.USER + '/experiences/', "POST", JSON.stringify(this.state.experience))
+            const formData = new FormData();
+            formData.append("experience", this.state.file)
+            console.log(Api.USER)
+            const postResp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.props.token,
+                },
+                body: JSON.stringify(expr) 
+            })
+            const post = await postResp.json()
+            const resp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences/' + post._id + '/picture', {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + this.props.token,
+                },
+                body:formData
+            })
+            const updatedUser = await resp.json()
+            console.log(updatedUser)
         }
-        this.props.setModal()
+        this.props.setModal(!this.props.open)
     }
     render() {
         return (
@@ -84,6 +121,12 @@ class ExperienceModal extends React.Component {
                 placeholder="Date you finished(if necessary)?"
                 />
             </FormGroup>
+            <FormGroup check>
+            <Label check>
+                <Input id="tillNow" onChange={this.updateObj} type="checkbox" />{' '}
+                    Current work position 
+                </Label>
+            </FormGroup>
             <FormGroup>
                 <Label for="description">Duties</Label>
                 <Input
@@ -106,7 +149,7 @@ class ExperienceModal extends React.Component {
                 <Label for="picture">Picture</Label>
                 <Input
                     id='image'
-                    type='text'
+                    type='file'
                     onChange={this.updateObj}
                 />
             </FormGroup>
@@ -131,4 +174,4 @@ class ExperienceModal extends React.Component {
     }
 }
 
-export default ExperienceModal;
+export default connect(mapStateToProps, mapDispatchToProps)(ExperienceModal);
