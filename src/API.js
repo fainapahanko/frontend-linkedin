@@ -20,9 +20,13 @@ class Api {
         return b
     }
 
+    static get TOKEN() {
+        return localStorage.getItem("token")
+    }
+
     static get BASE_HEADERS() {
         return {
-            Authorization: 'Basic ' + Api.AUTH
+            Authorization: 'Basic ' + Api.TOKEN,
         };
     }
 
