@@ -26,7 +26,7 @@ class Api {
 
     static get BASE_HEADERS() {
         return {
-            Authorization: 'Basic ' + Api.TOKEN,
+            Authorization: 'Bearer ' + Api.TOKEN,
         };
     }
 

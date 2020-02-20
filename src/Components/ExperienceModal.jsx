@@ -46,27 +46,32 @@ class ExperienceModal extends React.Component {
             const post = await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr)) 
             await Api.fetch('/profile/' + Api.USER + '/experiences/' + post._id + 'picture', "PUT", formData)
         } else {
+            // const formData = new FormData();
+            // formData.append("experience", this.state.file)
+            // console.log(Api.USER)
+            // const postResp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences', {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //         "Authorization": "Bearer " + this.props.token,
+            //     },
+            //     body: JSON.stringify(expr) 
+            // })
+            // const post = await postResp.json()
+            // const resp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences/' + post._id + '/picture', {
+            //     method: "POST",
+            //     headers: {
+            //         "Authorization": "Bearer " + this.props.token,
+            //     },
+            //     body:formData
+            // })
+            // const updatedUser = await resp.json()
+            // console.log(updatedUser)
+            const post = await Api.fetch('/profile/' + Api.USER + '/experiences/', "POST", JSON.stringify(expr)) 
+            console.log(post)
             const formData = new FormData();
             formData.append("experience", this.state.file)
-            console.log(Api.USER)
-            const postResp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.props.token,
-                },
-                body: JSON.stringify(expr) 
-            })
-            const post = await postResp.json()
-            const resp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences/' + post._id + '/picture', {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + this.props.token,
-                },
-                body:formData
-            })
-            const updatedUser = await resp.json()
-            console.log(updatedUser)
+            const resp = await Api.fetch(`/profile/${Api.USER}/experiences/${post._id}/picture`, "POST", formData)
         }
         this.props.setModal(!this.props.open)
     }
