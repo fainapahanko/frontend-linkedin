@@ -34,7 +34,7 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start -r dotenv/config",
+    "start": "react-scripts start",
     "build": "webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
