@@ -132,7 +132,7 @@ class NavigationBar extends React.Component {
                   ? <NavItem> <div className="nav-item-div">
                   <Link to="/Profile" style={{ textDecoration: 'none', color: 'white'}} >
                   <div className="profile-image-div">
-                     {this.props.currentUser ? <img src={this.props.currentUser.profile.image} className="nav-profile-pic" alt="profile-img"/> : <img src="https://fooddole.com/Modules/eCommerce/images/default-img.png" className="nav-profile-pic" alt="profile-img"/>}
+                     {this.props.currentUser ? <img src={this.props.currentUser.image} className="nav-profile-pic" alt="profile-img"/> : <img src="https://fooddole.com/Modules/eCommerce/images/default-img.png" className="nav-profile-pic" alt="profile-img"/>}
                   </div>
                   <NavLink>Me</NavLink>
                   </Link>

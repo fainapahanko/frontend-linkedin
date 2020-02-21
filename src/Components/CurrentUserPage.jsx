@@ -14,12 +14,6 @@ const CurrentUserPage = (props) => {
     const [user, setUser] = useState({})
     const [users, setUsers] = useState([])
     const mounted = useRef();
-    // componentDidUpdate = (prevProps, prevState) => {
-    //     if (prevProps.match.params.username !== this.props.match.params.username){
-    //         this.fetchingCurrentUser()
-    //         this.fetchingCurrentExpirience()
-    //     }
-    // }
 
     const fetchingUsers = async () => {
         let username = localStorage.getItem('username')
@@ -44,7 +38,12 @@ const CurrentUserPage = (props) => {
 
     const fetchingCurrentUser = async() => {
         setLoading(true)
+        console.log(props.match.params.username)
         let resp = await Api.fetch('/profile/' + props.match.params.username, 'GET')
+        // let resp = await fetch(`http://localhost:3433/profile/${props.match.params.username}`, {
+        //     method: "GET"
+        // })
+        console.log(resp)
         setUser(resp)
         setLoading(false)
     }
@@ -53,7 +52,7 @@ const CurrentUserPage = (props) => {
             <Col className="col-lg-7 col-12 mt-3">
             {loading ? 
                 <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> : 
-                <div className="profile-main-div"> <ProfileHeader user={user.profile} /> </div>
+                <div className="profile-main-div"> <ProfileHeader user={user} /> </div>
             }
             {loading ? 
                 <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> :

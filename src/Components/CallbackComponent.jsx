@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 
 const mapStateToProps = state => state
+
 const mapDispatchToProps = dispatch => ({
     setUserToken: base64 => dispatch({
       type:"SET_USERBASE64",

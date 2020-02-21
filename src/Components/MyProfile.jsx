@@ -13,6 +13,7 @@ import "../index.css";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => state
+
 const mapDispatchToProps = dispatch => ({
   addCurrentUser: user => dispatch({
       type: "ADD_CURRENT_USER",
@@ -24,7 +25,6 @@ const MyProfile = (props) => {
     const [users, setUsers] = useState([]);
     const [modal, setModal] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [user, setUser] = useState({})
 
     const toggle = () => {
         setModal(!modal)
@@ -35,35 +35,15 @@ const MyProfile = (props) => {
         let response = await Api.fetch("/profile", "GET");
         let users = response.filter(resp => resp.username !== username)
         setUsers(users)
-        console.log(users)
-    }
-
-    const getMyProfile = async() => {
-      const token = localStorage.getItem('token')
-      let resp = await fetch('http://localhost:3433/profile/me', {
-        method: 'GET',
-        headers: {
-          "Authorization": "Bearer " + token,
-        }
-      })
-      if(resp.ok) {
-        let currentUser = await resp.json()
-        console.log(currentUser)
-        setUser(currentUser)
-      } else {
-        console.log('loch')
-      }
     }
 
     useEffect(() => {
         setLoading(true)
         setTimeout(() => {
           fetchingUsers()
-          getMyProfile()
           setLoading(false)
         },1500)
     }, [])
-    console.log(props)
     return (
       <Row>
         <Col className="col-lg-7 col-12 mt-3">
@@ -79,7 +59,7 @@ const MyProfile = (props) => {
             </>
           ) : (
             <div className="profile-main-div">
-              <MyProfileHeader user={user.profile} />
+              <MyProfileHeader />
             </div>
           )}
           {loading ? (
@@ -102,7 +82,7 @@ const MyProfile = (props) => {
                 />
                 </div>
                 <h3 style={{ fontSize: "26px" }}>Experience</h3>
-                {user.experience ? user.experience.map((u, i) => (
+                {props.currentUser ? props.currentUser.experiences.map((u, i) => (
                   <MyExperience
                     usExpData={u}
                     key={i}

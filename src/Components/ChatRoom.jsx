@@ -1,10 +1,12 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import Api from '../API'
 import {Input} from 'reactstrap'
 import io from "socket.io-client";
 import '../main.css'
 import { connect } from 'react-redux';
+import Moment from 'react-moment'
 
 const mapStateToProps = state => state
 
@@ -13,6 +15,11 @@ class ChatRoom extends React.Component {
     state = { 
         message: '',
         messages: []
+    }
+    getBoxClassNames = (from) => {
+        if(from === localStorage.getItem('username')){
+            return 'msg-author'
+        } else return 'msg-receiver'
     }
     something = () => {
         this.props.toggle()
@@ -24,46 +31,37 @@ class ChatRoom extends React.Component {
         })
     }
     componentDidMount = async() => {
+        let msgs = await Api.fetch('/msg','GET')
+        const messages = msgs.filter(msg => msg.from === this.props.user.username || msg.to === this.props.user.username)
+        this.setState({
+            messages: messages
+        })
         const options = {
             transports: ["websocket"]
         };
-        this.socket = io(`https://striveschool.herokuapp.com`,options)
-        const username = this.props.currentUser.username
-        this.socket.emit('setUsername',{
-            username: username
-        });
-        let resp = await fetch(`https://striveschool.herokuapp.com/api/messages/${this.props.user.username}`, {
-            method:'get'
-        })
-        if(resp.ok) {
-            let msgs = await resp.json()
-            console.log(msgs)
-            this.setState({messages: msgs})
-        }
+
+        this.socket = io(`http://localhost:3433`,options)
     
-        this.socket.on("chatmessage", msg => {
-            console.log(msg)
+        this.socket.on("message", message => {
             this.setState({
-                messages: [...this.state.messages, msg]
-            });
-        });
-        this.socket.on('list', (value) => {
-            console.log('list of users recieved', value)
+              messages: [...this.state.messages, message],
+            })
         })
-        //console.log(this.state)
+
+        this.socket.emit("login", {token: localStorage.getItem('token'), username: localStorage.getItem('username')} )
     }
+
     sendMessage = async(e) => {
         e.preventDefault();
-        
-        this.socket.emit("chatmessage", {
-            from: this.props.currentUser.profile.username,
+        this.socket.emit("message", {
+            from: this.props.currentUser.username,
             to: this.props.user.username,
             text: this.state.message
         });
         this.setState({
             message: ""
         });
-        //console.log(this.state)
+        console.log(this.state)
     }
 
     render() { 
@@ -80,11 +78,11 @@ class ChatRoom extends React.Component {
                         </div>
                     </div>
                     <div className='main-chat-div'>
-                        {/* <div>
+                        <div>
                             <ul>
-                                {this.state.messages && this.state.messages.map((s,i) => <ol key={i}>{s}</ol>)}
+                                {this.state.messages ? this.state.messages.map((s,i) => <div key={i} className={this.getBoxClassNames(s.from)}> <Moment className='chat-moment' fromNow>{s.created}</Moment> <br></br> {s.text}</div>) : <></>}
                             </ul>
-                        </div> */}
+                        </div>
                     </div>
                     <div className="row">
                         <div className='col-8'>

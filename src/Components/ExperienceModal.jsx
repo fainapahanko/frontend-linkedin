@@ -40,38 +40,22 @@ class ExperienceModal extends React.Component {
         let expr = this.state.experience
         console.log(expr)
         if(this.props.experience) {
-            const formData = new FormData();
-            formData.append("experience", this.state.file)
             const {_id} = JSON.parse(JSON.stringify(this.props.experience));
-            const post = await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr)) 
-            await Api.fetch('/profile/' + Api.USER + '/experiences/' + post._id + 'picture', "PUT", formData)
+            const exp = await Api.fetch('/profile/' + Api.USER + '/experiences/' + _id, "PUT", JSON.stringify(expr)) 
+            let resp = await Api.fetch('/profile/' + Api.USER + '/experiences/' + expr._id + '/picture', "POST", formData)
+            if(resp){
+                let me = await Api.fetch(`/profile/me`, "GET")
+                this.props.setUser(me)
+            }
         } else {
-            // const formData = new FormData();
-            // formData.append("experience", this.state.file)
-            // console.log(Api.USER)
-            // const postResp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences', {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //         "Authorization": "Bearer " + this.props.token,
-            //     },
-            //     body: JSON.stringify(expr) 
-            // })
-            // const post = await postResp.json()
-            // const resp = await fetch('http://localhost:3433/profile/' + Api.USER + '/experiences/' + post._id + '/picture', {
-            //     method: "POST",
-            //     headers: {
-            //         "Authorization": "Bearer " + this.props.token,
-            //     },
-            //     body:formData
-            // })
-            // const updatedUser = await resp.json()
-            // console.log(updatedUser)
-            const post = await Api.fetch('/profile/' + Api.USER + '/experiences/', "POST", JSON.stringify(expr)) 
-            console.log(post)
-            const formData = new FormData();
-            formData.append("experience", this.state.file)
-            const resp = await Api.fetch(`/profile/${Api.USER}/experiences/${post._id}/picture`, "POST", formData)
+            console.log("yo")
+            const exp = await Api.fetch('/profile/' + Api.USER + '/experiences', "POST", JSON.stringify(expr), 'application/json') 
+            const resp = await Api.fetch(`/profile/${Api.USER}/experiences/${exp._id}/picture`, "POST", formData)
+            if(resp) {
+                let me = await Api.fetch(`/profile/me`, "GET")
+                console.log(me)
+                this.props.setUser(me)
+            }
         }
         this.props.setModal(!this.props.open)
     }
@@ -87,7 +71,7 @@ class ExperienceModal extends React.Component {
                 alt="linkedIn background"
             ></img>
             </div>
-            <Form className="update-form mt-5" onSubmit={this.handleSubmit}>
+            <Form className="update-form-exp mt-5" onSubmit={this.handleSubmit}>
             <FormGroup>
                 <Label for="examplePassword">Company</Label>
                 <Input

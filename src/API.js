@@ -2,7 +2,7 @@ import {ajax} from "rxjs/ajax";
 
 class Api {
 
-    //static BASE_URL = "https://linkedin-api-be.herokuapp.com";
+    // static BASE_URL = "http://linkedin-api-be.herokuapp.com";
     static BASE_URL = "http://localhost:3433";
 
     static get USER() {
@@ -26,7 +26,7 @@ class Api {
 
     static get BASE_HEADERS() {
         return {
-            Authorization: 'Bearer ' + Api.TOKEN,
+            "Authorization": "Bearer " + Api.TOKEN,
         };
     }
 
@@ -42,7 +42,7 @@ class Api {
         return JSON.parse(res);
     }
 
-    static async fetch(endpoint, method = 'GET', body, contentType = 'application/json') {
+    static async fetch(endpoint, method = 'GET', body, contentType) {
         const headers = {...Api.BASE_HEADERS};
         if (contentType) headers["Content-type"] = contentType;
         try {
@@ -53,14 +53,12 @@ class Api {
             });
             return await resp.json();
         } catch (e) {
-            console.error(e);
             return null;
         }
 
     }
 
     static async checkAuth(endpoint, method = 'GET', body, contentType = 'application/json') {
-        console.log(endpoint);
         if (contentType) Api.BASE_HEADERS["Content-type"] = contentType;
         try {
             let resp = await fetch(Api.BASE_URL + endpoint, {

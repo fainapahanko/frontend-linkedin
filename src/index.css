@@ -39,9 +39,11 @@ code {
 .nav-link {
   margin-left: 0.5rem;
 }
-
+.update-form-exp {
+  padding: 50px 20px;
+}
 .update-form {
-  padding: 60px 20px;
+  padding: 0px 20px;
 }
 
 .nav-icon {
@@ -189,7 +191,7 @@ code {
 }
 
 .share-box_trigger {
-  width:100%;
+width:100%;
 border-right: 1px solid rgba(0, 0, 0, 0.15) !important;
 background-color: rgb(245, 245, 245) !important;
 cursor: pointer !important;
