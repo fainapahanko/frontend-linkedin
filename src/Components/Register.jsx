@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Loader from './LoadingComponent'
+import Api from '../API'
 import {Form, FormGroup, Label, Button, FormText, Input, FormFeedback} from 'reactstrap'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
@@ -28,7 +29,7 @@ const Register = (props) => {
             password: password,
             username: username 
         }
-        let response = await fetch('http://localhost:3433/users/signup', {
+        let response = await fetch('https://linkedin-api.azurewebsites.net/users/signup', {
             method: "POST",
             body: JSON.stringify(credentials),
             headers: {
@@ -58,30 +59,14 @@ const Register = (props) => {
     const handleProfile = async(e) => {
         e.preventDefault()
         const username = localStorage.getItem('username')
-        const token = localStorage.getItem('token')
-        const resp = await fetch(`http://localhost:3433/profile/${username}`, {
-            method: 'POST',
-            body: JSON.stringify(profile),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token,
-            }
-        })
-        if(resp.ok) {
-            let user = await resp.json()
-            props.setUser(user)
+        const resp = await fetch(`/profile/${username}`,'POST',JSON.stringify(profile))
+        if(resp) {
+            props.setUser(resp)
             const formData = new FormData();
             formData.append("profile", file)
-            const picResp = await fetch(`http://localhost:3433/profile/${username}/picture`, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Authorization": "Bearer " + token,
-                }
-            })
+            const picResp = await Api.fetch(`/profile/${username}/picture`, "POST",formData)
             if(picResp.ok) {
                 let currentUser = await picResp.json()
-                console.log("URRSAAAA")
                 props.setUser(currentUser)
                 props.history.push("/profile")
             } else {

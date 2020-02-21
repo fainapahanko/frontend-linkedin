@@ -44,13 +44,13 @@ class ProfileModal extends React.Component {
       event.preventDefault()
       const {_id} = JSON.parse(JSON.stringify(this.props.profile));
       if(!this.props.profile){
-        const resp = await fetch('/profile/', 'POST', JSON.stringify(this.state.profile))
+        const resp = await Api.fetch('/profile/', 'POST', JSON.stringify(this.state.profile))
         console.log(resp)
       }
       let resp = await Api.fetch('/profile/' + _id, 'PUT', JSON.stringify(this.state.profile))
       console.log(resp)
       if(resp) {
-        this.props.addCurrentUser(this.state.profile)
+        this.props.addCurrentUser(resp)
       }
       this.props.setModal(!this.props.open)
     }

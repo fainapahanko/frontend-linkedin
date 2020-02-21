@@ -4,6 +4,7 @@ import CurrentUserPage from './CurrentUserPage'
 import CallbackComponent from './CallbackComponent'
 import Register from './Register'
 import Login from './Login'
+import Api from '../API'
 import Newsfeed from './NewsFeed'
 import {Container} from 'reactstrap'
 import NavigationBar from './NavigationBar';
@@ -26,26 +27,14 @@ const mapDispatchToProps = dispatch => ({
 const Main = (props) => {
 
   const checkAurth = async() => {
-    const token = localStorage.getItem('token')
-    const response = await fetch('http://localhost:3433/users/refresh', {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + token,
-      }
-    })
-    if(response.ok){
-      let token = await response.json()
-      props.setToken(token.token)
-      localStorage.setItem('token', token.token)
-      props.setToken(token.token)
-      const resp = await fetch('http://localhost:3433/profile/me',{
-          headers: {
-            "Authorization": "Bearer " + token.token,
-        }
-      })
+    const response = await Api.fetch('/users/refresh', "POST")
+    if(response){
+      props.setToken(response.token)
+      localStorage.setItem('token', response.token)
+      props.setToken(response.token)
+      const resp = await Api.fetch('/profile/me','GET')
       if(resp){
-        const currentUser = await resp.json()
-        props.setUser(currentUser)
+        props.setUser(resp)
       }
     }
     else {

@@ -25,15 +25,9 @@ const  Login = (props) => {
   const [error, setError] = useState(false)
 
   const getMyProfile = async(token) => {
-    let resp = await fetch('http://localhost:3433/profile/me', {
-      method: 'GET',
-      headers: {
-        "Authorization": "Bearer " + token,
-      }
-    })
-    if(resp.ok) {
-      let currentUser = await resp.json()
-      props.addCurrentUser(currentUser)
+    let resp = await Api.fetch('/profile/me', 'GET')
+    if(resp) {
+      props.addCurrentUser(resp)
       props.setToken(token)
     } else {
       setError(true)
@@ -46,7 +40,7 @@ const  Login = (props) => {
       username: username,
       password: password
     }
-    const resp = await fetch('http://localhost:3433/users/signin', {
+    const resp = await fetch('https://linkedin-api.azurewebsites.net/users/signin', {
       method: "POST",
       body: JSON.stringify(credentials),
       headers: {
