@@ -40,7 +40,7 @@ class ChatRoom extends React.Component {
             transports: ["websocket"]
         };
 
-        this.socket = io(`http://localhost:3433`,options)
+        this.socket = io(`https://linkedin-api.azurewebsites.net`,options)
     
         this.socket.on("message", message => {
             this.setState({
