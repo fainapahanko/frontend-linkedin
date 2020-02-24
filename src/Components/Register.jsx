@@ -59,15 +59,14 @@ const Register = (props) => {
     const handleProfile = async(e) => {
         e.preventDefault()
         const username = localStorage.getItem('username')
-        const resp = await fetch(`/profile/${username}`,'POST',JSON.stringify(profile))
+        const resp = await Api.fetch(`/profile/${username}`,'POST', JSON.stringify(profile), 'application/json')
         if(resp) {
             props.setUser(resp)
             const formData = new FormData();
             formData.append("profile", file)
-            const picResp = await Api.fetch(`/profile/${username}/picture`, "POST",formData)
-            if(picResp.ok) {
-                let currentUser = await picResp.json()
-                props.setUser(currentUser)
+            const picResp = await Api.fetch(`/profile/${username}/picture`, "POST", formData)
+            if(picResp) {
+                props.setUser(picResp)
                 props.history.push("/profile")
             } else {
                 console.log("Da blya :(")

@@ -12,12 +12,12 @@ class CommentModal extends React.Component {
 
     submit = (e) => {
         if (this.state.comment._id) {
-            Api.fetch("/posts/" + this.props.postId, "PUT", JSON.stringify(this.state.comment)).then(res => {
+            Api.fetch("/posts/" + this.props.postId, "PUT", JSON.stringify(this.state.comment), 'application/json').then(res => {
                 this.props.refresh();
             });
 
         } else {
-            Api.fetch("/posts/" + this.props.postId + "/comment", "POST", JSON.stringify(this.state.comment)).then(res => {
+            Api.fetch("/posts/" + this.props.postId + "/comment", "POST", JSON.stringify(this.state.comment), 'application/json').then(res => {
                 this.props.refresh()
             });
         }

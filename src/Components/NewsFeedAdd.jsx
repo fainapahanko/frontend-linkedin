@@ -8,7 +8,8 @@ import Api from "../API";
 
 class NewsFeedAdd extends Component {
     state = {
-        text: ""
+        text: "",
+        selectedFile: null
     };
 
     save = async() => {
@@ -19,29 +20,18 @@ class NewsFeedAdd extends Component {
         //         Api.request("/posts/" + res._id + "/picture", "POST", formData).then(() => this.props.refresh());
         //     } else this.props.refresh();
         // });
-        const token = localStorage.getItem('token')
-        const username = localStorage.getItem('username')
-        console.log(username)
-        console.log(token)
-        let resp = await fetch('http://localhost:3433/posts/'+username, {
-            method: 'POST',
-            body: JSON.stringify({text: this.state.text}),
-            headers: {
-                "Authorization": "Bearer " + token,
-            }
-        })
-        console.log(resp)
-        if(resp.ok) {
+        // const token = localStorage.getItem('token')
+        // const username = localStorage.getItem('username')
+        // console.log(username)
+        // console.log(token)
+        console.log(this.state.text)
+        let resp = await Api.fetch('/posts/' + localStorage.getItem('username'), 'POST', JSON.stringify({text: this.state.text}), 'application/json')
+        if(resp) {
             const formData = new FormData();
             formData.append("image", this.state.selectedFile);
-            let response = await fetch('http://localhost:3433/posts/'+resp._id+'/picture', {
-                method: 'POST',
-                body: JSON.stringify({text: this.state.text}),
-                headers: {
-                    "Authorization": "Bearer " + token,
-                }
-            })
-            if(response.ok){
+            console.log(this.state.selectedFile)
+            let response = await Api.fetch('/posts/' + resp._id + '/picture', "POST", formData)
+            if(response){
                 console.log('good job')
                 this.props.refresh();
             }

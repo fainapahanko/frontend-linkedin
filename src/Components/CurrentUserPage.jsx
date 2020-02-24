@@ -47,6 +47,7 @@ const CurrentUserPage = (props) => {
         setUser(resp)
         setLoading(false)
     }
+    console.log('expe',user.experiences)
     return ( 
         <Row>
             <Col className="col-lg-7 col-12 mt-3">
@@ -56,9 +57,9 @@ const CurrentUserPage = (props) => {
             }
             {loading ? 
                 <><Loader color="#007ACC" height={40} width={40} type="TailSpin" className="loader-profile-page"/> </> :
-                user.experience && <div className="mt-3 px-5 py-4 profile-main-div"> 
+                user.experiences && <div className="mt-3 px-5 py-4 profile-main-div"> 
                     <h3 style={{fontSize: "26px"}}>Experience</h3> 
-                {user.experience
+                {user.experiences
                 .map((u,i) => ( <Experience experience={u} key={i} />))}</div>
             }
             </Col>
