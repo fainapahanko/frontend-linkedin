@@ -20,13 +20,10 @@ class NewsFeed extends Component {
   loadData = async () => {
     let resp = await Api.fetch('/posts', 'GET')
     let users = await Api.fetch('/profile', 'GET')
-    console.log(resp)
-    console.log(users)
     resp.map(post => {
       post.user = users.find(user => user.username === post.username);
       return post;
     });
-    console.log(resp)
     resp.reverse();
     this.setState({
       newsfeed: resp,
