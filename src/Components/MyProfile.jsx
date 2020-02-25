@@ -82,7 +82,7 @@ const MyProfile = (props) => {
                 />
                 </div>
                 <h3 style={{ fontSize: "26px" }}>Experience</h3>
-                {props.currentUser.experiences ? props.currentUser.experiences.map((u, i) => (
+                {props.currentUser && props.currentUser.experiences ? props.currentUser.experiences.map((u, i) => (
                   <MyExperience
                     usExpData={u}
                     key={i}

@@ -62,7 +62,7 @@ class CommentModal extends React.Component {
                                     <FormGroup>
                                         <Label for='startDate'>Write your comment</Label>
                                         <textarea onChange={this.updateForm} name="comment" id="comment" cols="30"
-                                                  rows="10"></textarea>
+                                                  rows="3"></textarea>
                                     </FormGroup>
                                 </Col>
                             </Row>

@@ -18,27 +18,19 @@ class NewsFeed extends Component {
   };
 
   loadData = async () => {
-    let resp = await fetch('http://localhost:3433/posts', {
-      method: "GET"
-    })
-    console.log('pizdec vsio besit')
+    let resp = await Api.fetch('/posts', 'GET')
+    let users = await Api.fetch('/profile', 'GET')
     console.log(resp)
-    const newsfeed = await resp.json()
-    let uResp = await fetch('http://localhost:3433/profile', {
-      method: "GET"
-    })
-    const users = await uResp.json()
-    console.log(newsfeed)
     console.log(users)
-    newsfeed.map(post => {
+    resp.map(post => {
       post.user = users.find(user => user.username === post.username);
       return post;
     });
-    console.log(newsfeed)
-    newsfeed.reverse();
+    console.log(resp)
+    resp.reverse();
     this.setState({
-      newsfeed: newsfeed,
-      items: newsfeed,
+      newsfeed: resp,
+      items: resp,
       isLoading: false
     });
   };

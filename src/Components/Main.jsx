@@ -45,6 +45,13 @@ const Main = (props) => {
     }
   }
 
+  const checkAccess = () => {
+    let isAuthenticated;
+    if(localStorage.getItem('token') == undefined) isAuthenticated = false
+    else isAuthenticated = true
+    return isAuthenticated
+  }
+
   useEffect(() => {
     checkAurth()
   }, [])
@@ -55,7 +62,7 @@ const Main = (props) => {
       <Container className="parentcontainer">
           <Switch>
               <Route path='/' exact component={Newsfeed} />
-              <PrivateRoute isAuthenticated={localStorage.getItem('token')} path="/profile" component={MyProfile} />
+              <PrivateRoute isAuthenticated={checkAccess} path="/profile" component={MyProfile} />
               <Route path="/currentUserPage:username" component={CurrentUserPage} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
