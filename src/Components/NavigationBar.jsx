@@ -116,7 +116,7 @@ class NavigationBar extends React.Component {
                </NavItem>
                <NavItem>
                   <div className="nav-item-div">
-                     <Link to="/Newsfeed" style={{ textDecoration: 'none',color: 'white'}}>  
+                     <Link to="/newsfeed" style={{ textDecoration: 'none',color: 'white'}}>  
                      <FontAwesomeIcon className="nav-icon" icon={faComments}/>
                      <NavLink>Messaging</NavLink>
                      </Link>
@@ -130,7 +130,7 @@ class NavigationBar extends React.Component {
                </NavItem>
                   {this.props.token  
                   ? <NavItem> <div className="nav-item-div">
-                  <Link to="/Profile" style={{ textDecoration: 'none', color: 'white'}} >
+                  <Link to="/profile" style={{ textDecoration: 'none', color: 'white'}} >
                   <div className="profile-image-div">
                      {this.props.currentUser ? <img src={this.props.currentUser.image} className="nav-profile-pic" alt="profile-img"/> : <img src="https://fooddole.com/Modules/eCommerce/images/default-img.png" className="nav-profile-pic" alt="profile-img"/>}
                   </div>

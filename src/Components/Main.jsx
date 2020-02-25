@@ -5,10 +5,11 @@ import CallbackComponent from './CallbackComponent'
 import Register from './Register'
 import Login from './Login'
 import Api from '../API'
+import PrivateRoute from './PrivateRoute'
 import Newsfeed from './NewsFeed'
 import {Container} from 'reactstrap'
 import NavigationBar from './NavigationBar';
-import Profile from './MyProfile'
+import MyProfile from './MyProfile'
 import { connect } from 'react-redux';
 
 const mapStateToProps = state=> state
@@ -54,11 +55,11 @@ const Main = (props) => {
       <Container className="parentcontainer">
           <Switch>
               <Route path='/' exact component={Newsfeed} />
-              <Route path="/Profile" component={Profile} />
+              <PrivateRoute isAuthenticated={localStorage.getItem('token')} path="/profile" component={MyProfile} />
               <Route path="/currentUserPage:username" component={CurrentUserPage} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
-              <Route path="/Newsfeed" component={Newsfeed}/>
+              <Route path="/newsfeed" component={Newsfeed}/>
               <Route path="/callback">
                 <CallbackComponent />
               </Route>

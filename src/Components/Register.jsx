@@ -64,12 +64,13 @@ const Register = (props) => {
             props.setUser(resp)
             const formData = new FormData();
             formData.append("profile", file)
-            const picResp = await Api.fetch(`/profile/${username}/picture`, "POST", formData)
+            const picResp = await Api.fetch(`/profile/${username}/picture`, 'POST', formData)
             if(picResp) {
-                props.setUser(picResp)
+                let me = await Api.fetch('/profile/me', 'GET')
+                props.setUser(me)
                 props.history.push("/profile")
             } else {
-                console.log("Da blya :(")
+                console.log(picResp)
             }
         }
     }

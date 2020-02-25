@@ -38,9 +38,7 @@ const ModalPicture = (props) => {
         const formData = new FormData();
         formData.append("profile", file)
         let resp = await Api.fetch(`/profile/${props.currentUser.username}/picture`, 'POST', formData)
-        console.log(resp)
         if(resp){
-            console.log(resp)
             props.addCurrentUser(resp)
         } else {
             console.log(resp)

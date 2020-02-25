@@ -48,12 +48,10 @@ class ExperienceModal extends React.Component {
                 this.props.setUser(me)
             }
         } else {
-            console.log("yo")
             const exp = await Api.fetch('/profile/' + Api.USER + '/experiences', "POST", JSON.stringify(expr), 'application/json') 
             const resp = await Api.fetch(`/profile/${Api.USER}/experiences/${exp._id}/picture`, "POST", formData)
             if(resp) {
                 let me = await Api.fetch(`/profile/me`, "GET")
-                console.log(me)
                 this.props.setUser(me)
             }
         }
